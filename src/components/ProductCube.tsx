@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { asset } from "@/lib/asset";
+import { imageFocus } from "@/lib/data";
 
 const FACE_TRANSFORMS = [
   "rotateY(0deg)",
@@ -21,7 +22,7 @@ export default function ProductCube({ images }: { images: string[] }) {
       <div className="cube">
         {faces.map((f, i) => (
           <div key={i} className="cube-face" style={{ transform: f.transform }}>
-            <Image src={asset(f.src)} alt="" fill sizes="230px" className="object-cover" />
+            <Image src={asset(f.src)} alt="" fill sizes="230px" className="object-cover" style={{ objectPosition: imageFocus(f.src) }} />
           </div>
         ))}
       </div>

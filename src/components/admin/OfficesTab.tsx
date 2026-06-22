@@ -15,6 +15,7 @@ import {
   Spinner,
   type ToastState,
 } from "./ui";
+import { FramingButton } from "./FramingButton";
 
 const BLANK: Partial<Product> = {
   name: "",
@@ -229,6 +230,9 @@ function GalleryEditor({
               >
                 ✕
               </button>
+              <div className="absolute bottom-0.5 left-0.5">
+                <FramingButton src={adminPreviewSrc(src)} path={src} compact />
+              </div>
             </div>
           ))}
         </div>

@@ -13,6 +13,7 @@ import {
   Spinner,
   type ToastState,
 } from "./ui";
+import { FramingButton } from "./FramingButton";
 
 function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v)) as T;
@@ -381,6 +382,9 @@ function HotDealsGallery({
               >
                 ✕
               </button>
+              <div className="absolute bottom-0.5 left-0.5">
+                <FramingButton src={src} path={src} compact />
+              </div>
             </div>
           ))}
         </div>

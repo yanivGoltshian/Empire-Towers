@@ -103,6 +103,13 @@ export const saveProduct = (p: Partial<Product>) =>
 export const deleteProduct = (id: string) =>
   apiSend<{ ok: boolean }>(`/api/product/${encodeURIComponent(id)}/`, "DELETE", {});
 
+// Image focal points: a path -> CSS object-position map applied wherever an
+// image renders inside an object-cover cropping frame. Non-destructive.
+export type ImageFocusMap = Record<string, string>;
+export const getImageFocusMap = () => apiGet<ImageFocusMap>("/api/image-focus/");
+export const setImageFocus = (path: string, position: string) =>
+  apiSend<{ ok: boolean; map: ImageFocusMap }>("/api/image-focus/", "PUT", { path, position });
+
 // --- image upload + client-side optimisation --------------------------------
 type ImageSpec = { maxW: number; maxH: number; quality: number };
 

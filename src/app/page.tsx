@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { homepage, categories, site, whatsappLink, telLink } from "@/lib/data";
+import { homepage, categories, site, whatsappLink, telLink, imageFocus } from "@/lib/data";
 import LeadForm from "@/components/LeadForm";
 import ProductCube from "@/components/ProductCube";
 import GallerySlideshow from "@/components/GallerySlideshow";
@@ -31,7 +31,7 @@ export default function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden hero-glow text-white">
         <div className="absolute inset-0">
-          <Image src={asset(homepage.hero.image)} alt="מגדלי האימפריה נדל״ן – מתחם משרדים להשכרה ביבנה" fill className="object-cover" priority />
+          <Image src={asset(homepage.hero.image)} alt="מגדלי האימפריה נדל״ן – מתחם משרדים להשכרה ביבנה" fill className="object-cover" style={{ objectPosition: imageFocus(homepage.hero.image) }} priority />
           {/* vertical office tour video, side-by-side with the building image */}
           <div className="absolute inset-y-0 left-0 w-1/2 sm:w-[44%] lg:w-1/3 overflow-hidden">
             <video
@@ -199,7 +199,7 @@ export default function Home() {
       {/* BRANDED PITCH */}
       <section className="mx-auto max-w-6xl px-4 py-16 grid gap-10 lg:grid-cols-2 items-center">
         <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl ring-1 ring-border order-last lg:order-first">
-          <Image src={asset(homepage.brandedPitch.image)} alt="יחידות פנויות להשכרה – מגדלי האימפריה נדל״ן" fill className="object-cover" />
+          <Image src={asset(homepage.brandedPitch.image)} alt="יחידות פנויות להשכרה – מגדלי האימפריה נדל״ן" fill className="object-cover" style={{ objectPosition: imageFocus(homepage.brandedPitch.image) }} />
         </div>
         <div>
           <span className="font-bold text-brand-dark">להשכרה עכשיו</span>
@@ -233,7 +233,7 @@ export default function Home() {
                 key={g}
                 className={`relative overflow-hidden rounded-2xl ring-1 ring-border group ${i === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-square"}`}
               >
-                <Image src={asset(g)} alt="מתחם המשרדים של מגדלי האימפריה ביבנה" fill className="object-cover transition duration-500 group-hover:scale-105" sizes="(max-width:768px) 50vw, 33vw" />
+                <Image src={asset(g)} alt="מתחם המשרדים של מגדלי האימפריה ביבנה" fill className="object-cover transition duration-500 group-hover:scale-105" style={{ objectPosition: imageFocus(g) }} sizes="(max-width:768px) 50vw, 33vw" />
               </div>
             ))}
           </div>

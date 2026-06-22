@@ -57,6 +57,11 @@ export type Homepage = {
   faq?: { q: string; a: string }[];
 };
 
+// Maps a stored image path (e.g. "/images/uploads/foo.jpg") to a CSS
+// object-position value (e.g. "50% 30%") so the admin can choose which part of
+// each photo stays visible inside the site's cropping (object-cover) frames.
+export type ImageFocusMap = Record<string, string>;
+
 export type Site = {
   name: string;
   legalName: string;

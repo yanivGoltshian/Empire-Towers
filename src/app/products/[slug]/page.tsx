@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { products, getProduct, categories, telLink, whatsappLink, site } from "@/lib/data";
+import { products, getProduct, categories, telLink, whatsappLink, site, imageFocus } from "@/lib/data";
 import LeadForm from "@/components/LeadForm";
 import ProductCard from "@/components/ProductCard";
 import JsonLd from "@/components/JsonLd";
@@ -64,7 +64,7 @@ export default async function ProductPage({
 
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="relative aspect-square rounded-3xl overflow-hidden bg-surface shadow-sm">
-            <Image src={asset(product.image)} alt={product.name} fill className="object-cover" priority />
+            <Image src={asset(product.image)} alt={product.name} fill className="object-cover" style={{ objectPosition: imageFocus(product.image) }} priority />
             {product.branded && (
               <span className="absolute top-4 right-4 rounded-full bg-eco px-3 py-1.5 text-sm font-semibold text-white">
                 פרויקט בהשקה

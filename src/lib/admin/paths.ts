@@ -7,6 +7,7 @@ export const PATHS = {
   homepage: "src/data/homepage.json",
   products: "src/data/products.json",
   categories: "src/data/categories.json",
+  imageFocus: "src/data/imageFocus.json",
 } as const;
 
 // Uploaded images get a single, unique destination so we never collide with an

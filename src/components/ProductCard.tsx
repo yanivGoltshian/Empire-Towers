@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { asset } from "@/lib/asset";
+import { imageFocus } from "@/lib/data";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
@@ -16,6 +17,7 @@ export default function ProductCard({ product }: { product: Product }) {
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
           className="object-cover transition duration-500 group-hover:scale-105"
+          style={{ objectPosition: imageFocus(product.image) }}
         />
         {product.branded && (
           <span className="absolute top-3 right-3 rounded-full bg-eco px-2.5 py-1 text-xs font-semibold text-white shadow-sm">

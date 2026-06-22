@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { asset } from "@/lib/asset";
+import { imageFocus } from "@/lib/data";
 
 export default function GallerySlideshow({
   images,
@@ -36,6 +37,7 @@ export default function GallerySlideshow({
           className={`object-cover transition-opacity duration-[1200ms] ease-in-out ${
             i === active ? "opacity-100" : "opacity-0"
           }`}
+          style={{ objectPosition: imageFocus(src) }}
           priority={i === 0}
         />
       ))}

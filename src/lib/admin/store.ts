@@ -6,7 +6,7 @@
 // valid across renames.
 import { getBackend } from "./backend";
 import { PATHS, UPLOADS_DIR } from "./paths";
-import type { Category, Product, Homepage, Site } from "@/lib/types";
+import type { Category, Product, Homepage, Site, ImageFocusMap } from "@/lib/types";
 
 function toStr(v: unknown, fallback = ""): string {
   return v === undefined || v === null ? fallback : String(v);
@@ -46,6 +46,37 @@ export async function getHomepage(): Promise<Homepage> {
 }
 export async function putHomepage(obj: Homepage): Promise<unknown> {
   return getBackend().writeJSON(PATHS.homepage, obj, "admin: update homepage");
+}
+
+// ---------- image focal points (object-position map) ----------
+// A non-destructive path -> CSS object-position map. The public build reads it
+// through src/lib/data.ts (imageFocus()) and applies it wherever an image sits
+// inside an object-cover cropping frame, so owners control which part shows.
+const DEFAULT_FOCUS = "50% 50%";
+
+export async function getImageFocus(): Promise<ImageFocusMap> {
+  try {
+    const map = await getBackend().readJSON<ImageFocusMap>(PATHS.imageFocus);
+    return map && typeof map === "object" ? map : {};
+  } catch {
+    return {};
+  }
+}
+
+// Re-reads the map and patches a single key (merge-on-save) so concurrent edits
+// don't clobber. A centered/empty position deletes the key to keep the map lean.
+export async function setImageFocus(path: string, position: string): Promise<ImageFocusMap> {
+  const key = toStr(path).trim();
+  if (!key) throw new Error("image path is required");
+  const map = await getImageFocus();
+  const pos = toStr(position).trim();
+  if (!pos || pos === DEFAULT_FOCUS) {
+    delete map[key];
+  } else {
+    map[key] = pos;
+  }
+  await getBackend().writeJSON(PATHS.imageFocus, map, `admin: set image focus ${key}`);
+  return map;
 }
 
 // ---------- categories (flat list) ----------

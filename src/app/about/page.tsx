@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { site } from "@/lib/data";
+import { site, imageFocus } from "@/lib/data";
 import PageHero from "@/components/PageHero";
 import { asset } from "@/lib/asset";
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
 
       <section className="mx-auto max-w-6xl px-4 py-14 grid gap-10 lg:grid-cols-2 items-center">
         <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl">
-          <Image src={asset("/images/offices/ad-corridor.png")} alt="מסדרון המשרדים במתחם מגדלי האימפריה ביבנה" fill className="object-cover" />
+          <Image src={asset("/images/offices/ad-corridor.png")} alt="מסדרון המשרדים במתחם מגדלי האימפריה ביבנה" fill className="object-cover" style={{ objectPosition: imageFocus("/images/offices/ad-corridor.png") }} />
         </div>
         <div>
           <h2 className="text-3xl font-black">מתחם משרדים שנותן לעסק להתרכז בעיקר</h2>

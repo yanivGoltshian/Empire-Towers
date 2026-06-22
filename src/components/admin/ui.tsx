@@ -2,6 +2,7 @@
 
 import React from "react";
 import { adminPreviewSrc, uploadImage } from "@/lib/admin/client";
+import { FramingButton } from "./FramingButton";
 
 // Mobile-first admin primitives. Phone styles are unprefixed; `sm:` adds the
 // desktop refinements. Tap targets are ≥44px on phones; inputs use text-base so
@@ -209,6 +210,11 @@ export function ImageUpload({
             <p dir="ltr" className="mt-1 truncate text-left text-xs text-[#5e6773]">
               {value}
             </p>
+          ) : null}
+          {value ? (
+            <div className="mt-2">
+              <FramingButton src={previewSrc} path={value} />
+            </div>
           ) : null}
           {err ? <p className="mt-1 text-xs text-red-600">{err}</p> : null}
         </div>
