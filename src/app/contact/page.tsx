@@ -53,7 +53,7 @@ export default function ContactPage() {
           <div className="mt-6 overflow-hidden rounded-2xl border border-border">
             <iframe
               title="מפה"
-              src={`https://maps.google.com/maps?q=${encodeURIComponent(site.address + ", " + site.city)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+              src={site.mapEmbedUrl || `https://maps.google.com/maps?q=${encodeURIComponent(site.address + ", " + site.city)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
               className="w-full h-64"
               loading="lazy"
             />

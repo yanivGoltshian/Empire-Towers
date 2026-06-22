@@ -68,6 +68,7 @@ export type Site = {
   address: string;
   city: string;
   hours: string;
+  mapEmbedUrl?: string;
   social: { facebook: string; instagram: string };
   certifications: string[];
 };

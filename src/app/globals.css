@@ -145,3 +145,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .cube { animation: none; transform: rotateX(-18deg) rotateY(-25deg); }
 }
+
+/* Admin panel: hide the horizontal scrollbar on the tab pills (still scrolls). */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

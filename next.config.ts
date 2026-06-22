@@ -1,13 +1,16 @@
 import type { NextConfig } from "next";
 
-// Static export → fully static `out/`, hostable on any CDN for ~$0.
-// On GitHub Pages (project site) the app is served under a sub-path, so the
-// CI build sets NEXT_PUBLIC_BASE_PATH (e.g. "/LandingPage"). Locally it is empty
-// so dev/preview keep serving from the root.
+// Single-host on Vercel: the public pages stay statically generated (SSG) while
+// the admin write-API under /api/* runs as Vercel serverless functions. That is
+// why `output: "export"` is intentionally NOT set here — a pure static export
+// cannot serve route handlers. trailingSlash is kept so existing public URLs
+// (and their SEO) don't change; the admin client therefore calls API paths WITH
+// a trailing slash to avoid a 308 redirect.
+//
+// basePath/assetPrefix stay env-driven (empty on Vercel = served from root).
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 const nextConfig: NextConfig = {
-  output: "export",
   trailingSlash: true,
   images: { unoptimized: true },
   basePath,

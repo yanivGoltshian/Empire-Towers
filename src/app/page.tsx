@@ -315,7 +315,7 @@ export default function Home() {
           <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl ring-1 ring-white/15">
             <iframe
               className="absolute inset-0 h-full w-full"
-              src="https://www.google.com/maps?q=%D7%94%D7%A7%D7%99%D7%A9%D7%95%D7%9F%204%20%D7%99%D7%91%D7%A0%D7%94&output=embed"
+              src={site.mapEmbedUrl || "https://www.google.com/maps?q=%D7%94%D7%A7%D7%99%D7%A9%D7%95%D7%9F%204%20%D7%99%D7%91%D7%A0%D7%94&output=embed"}
               title="מפה – יבנה, בכניסה לעיר"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
