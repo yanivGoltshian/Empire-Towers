@@ -72,7 +72,7 @@ export default function Home() {
           </div>
         </div>
         <div className="relative bg-gradient-to-l from-brand via-brand-dark to-brand">
-          <div className="mx-auto max-w-6xl px-4 py-3 text-center text-sm font-medium tracking-wide">
+          <div className="mx-auto max-w-6xl px-4 pt-3 pb-14 text-center text-sm font-medium tracking-wide">
             {homepage.announcement}
           </div>
         </div>
