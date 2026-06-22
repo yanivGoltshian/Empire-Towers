@@ -42,6 +42,8 @@ export default function Home() {
           {/* warm bronze mask — brighter than black, deepest behind the text */}
           <div className="absolute inset-0 bg-gradient-to-r from-ink-2/10 via-ink-2/45 to-ink-2/85" />
           <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/35 via-transparent to-transparent" />
+          {/* mobile: extra scrim so the hero text stays legible over the image; fades out on larger screens */}
+          <div className="absolute inset-0 bg-ink-2/45 sm:bg-transparent" />
           <div className="absolute inset-0 hero-glow opacity-35 mix-blend-soft-light" />
         </div>
         <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-28">
