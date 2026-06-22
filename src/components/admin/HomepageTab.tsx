@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import type { Homepage, Category } from "@/lib/types";
-import { getHomepage, putHomepage, apiGet, getCategories } from "@/lib/admin/client";
+import type { Homepage } from "@/lib/types";
+import { getHomepage, putHomepage, apiGet } from "@/lib/admin/client";
 import {
   Button,
   Field,
@@ -21,21 +21,77 @@ function clone<T>(v: T): T {
 
 // Collapsible section — collapsed by default on mobile keeps the long form
 // navigable. <details>/<summary> needs no JS state.
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <details className="group rounded-xl border border-[#dde3ea] bg-white">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 font-bold text-[#16314f]">
-        {title}
-        <span className="text-[#9aa4b2] transition group-open:rotate-180">▾</span>
+        <span>
+          {title}
+          {hint ? <span className="block text-xs font-normal text-[#9aa4b2]">{hint}</span> : null}
+        </span>
+        <span className="shrink-0 text-[#9aa4b2] transition group-open:rotate-180">▾</span>
       </summary>
       <div className="space-y-4 border-t border-[#eef1f5] px-4 py-4">{children}</div>
     </details>
   );
 }
 
+// Reusable gallery editor: thumbnails (with per-image framing + remove) plus an
+// uploader that appends. Used for every multi-image block on the homepage so the
+// owner edits each one the same way.
+function GalleryField({
+  label,
+  hint,
+  value,
+  onChange,
+  onBusy,
+}: {
+  label: string;
+  hint?: string;
+  value: string[];
+  onChange: (g: string[]) => void;
+  onBusy: (b: boolean) => void;
+}) {
+  return (
+    <Field label={label} hint={hint}>
+      {value.length ? (
+        <div className="mb-2 flex flex-wrap gap-2">
+          {value.map((src, i) => (
+            <div key={`${src}-${i}`} className="relative h-20 w-20 overflow-hidden rounded-lg border border-[#dde3ea]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => onChange(value.filter((_, idx) => idx !== i))}
+                className="absolute right-0 top-0 grid h-6 w-6 place-items-center bg-black/60 text-xs text-white"
+                aria-label="הסרת תמונה"
+              >
+                ✕
+              </button>
+              <div className="absolute bottom-0.5 left-0.5">
+                <FramingButton src={src} path={src} compact />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="mb-2 text-xs text-[#9aa4b2]">עדיין אין תמונות. הוסיפו תמונה ראשונה למטה.</p>
+      )}
+      <ImageUpload label="" value="" kind="wide" onBusy={onBusy} onUploaded={(path) => onChange([...value, path])} />
+    </Field>
+  );
+}
+
 export default function HomepageTab({ toast }: { toast: (t: ToastState) => void }) {
   const [hp, setHp] = React.useState<Homepage | null>(null);
-  const [cats, setCats] = React.useState<Category[]>([]);
   const [saving, setSaving] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const baseRef = React.useRef<Homepage | null>(null);
@@ -47,7 +103,6 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
         baseRef.current = clone(d);
       })
       .catch((e) => toast({ msg: (e as Error).message, kind: "err" }));
-    getCategories().then(setCats).catch(() => {});
   }, [toast]);
 
   if (!hp) return <Spinner />;
@@ -61,7 +116,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
     try {
       // Merge-on-save: re-read the freshest server copy and overwrite ONLY the
       // top-level regions changed this session (vs the loaded baseline). Editing
-      // the hero can't revert, say, hot deals that changed meanwhile. (gotchas #3)
+      // the hero can't revert, say, the gallery that changed meanwhile. (gotchas #3)
       let payload: Homepage = hp;
       const base = baseRef.current;
       if (base) {
@@ -89,9 +144,16 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
     }
   }
 
+  const faq = hp.faq ?? [];
+
   return (
     <div className="space-y-3">
-      <Section title="כותרת ראשית (Hero)">
+      <p className="rounded-xl bg-[#eef3f8] px-4 py-3 text-sm text-[#16314f]">
+        הסעיפים מסודרים בדיוק לפי סדר ההופעה באתר – מלמעלה למטה. לחצו על סעיף כדי לפתוח ולערוך אותו.
+      </p>
+
+      {/* 1 — HERO */}
+      <Section title="1 · כותרת ראשית (Hero)" hint="הבאנר העליון עם הסרטון ותמונת הבניין">
         <Field label="תווית עליונה">
           <Input value={hp.hero.eyebrow} onChange={(e) => patch("hero", { ...hp.hero, eyebrow: e.target.value })} />
         </Field>
@@ -102,7 +164,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           <Textarea value={hp.hero.subtitle} onChange={(e) => patch("hero", { ...hp.hero, subtitle: e.target.value })} />
         </Field>
         <ImageUpload
-          label="תמונת רקע"
+          label="תמונת רקע (הבניין)"
           value={hp.hero.image}
           kind="wide"
           onBusy={setBusy}
@@ -138,28 +200,16 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
         </div>
       </Section>
 
-      <Section title="פס הודעה">
-        <Field label="טקסט נגלל בראש העמוד">
+      {/* 2 — ANNOUNCEMENT BAR */}
+      <Section title="2 · פס הודעה" hint="הרצועה הצרה מתחת לבאנר">
+        <Field label="טקסט ההודעה">
           <Textarea value={hp.announcement} onChange={(e) => patch("announcement", e.target.value)} />
         </Field>
       </Section>
 
-      <Section title="פתיח (אודות קצר)">
-        <Field label="כותרת">
-          <Input value={hp.intro.title} onChange={(e) => patch("intro", { ...hp.intro, title: e.target.value })} />
-        </Field>
-        <Field label="משפט פתיחה">
-          <Textarea value={hp.intro.lead} onChange={(e) => patch("intro", { ...hp.intro, lead: e.target.value })} />
-        </Field>
-        <ListEditor
-          label="פסקאות"
-          value={hp.intro.paragraphs}
-          onChange={(v) => patch("intro", { ...hp.intro, paragraphs: v })}
-        />
-      </Section>
-
-      <Section title="יתרונות">
-        <p className="text-xs text-[#5e6773]">כל יתרון בשתי שורות: כותרת, ואז טקסט.</p>
+      {/* 3 — ADVANTAGES */}
+      <Section title="3 · יתרונות" hint="ארבעת הכרטיסים הצפים מתחת לבאנר">
+        <p className="text-xs text-[#5e6773]">כל יתרון: כותרת קצרה ואז שורת הסבר.</p>
         {hp.advantages.map((a, i) => (
           <div key={i} className="space-y-2 rounded-lg bg-[#f7f4ee] p-3">
             <Input
@@ -194,71 +244,58 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
         </Button>
       </Section>
 
-      <Section title="סוגי חללים">
+      {/* 4 — INTRO / WELCOME (+ slideshow) */}
+      <Section title="4 · ברוכים הבאים" hint="פסקת הפתיחה ומצגת התמונות שלצידה">
         <Field label="כותרת">
-          <Input value={hp.bagTypesTitle} onChange={(e) => patch("bagTypesTitle", e.target.value)} />
+          <Input value={hp.intro.title} onChange={(e) => patch("intro", { ...hp.intro, title: e.target.value })} />
         </Field>
-        <Field label="תת‑כותרת">
-          <Textarea value={hp.bagTypesSubtitle} onChange={(e) => patch("bagTypesSubtitle", e.target.value)} />
-        </Field>
-        <ListEditor label="פריטים" value={hp.bagTypes} onChange={(v) => patch("bagTypes", v)} />
-      </Section>
-
-      <Section title="קטגוריות מודגשות">
-        <Field label="בחרו אילו קטגוריות יוצגו בעמוד הבית">
-          <div className="flex flex-wrap gap-2">
-            {cats.map((c) => {
-              const on = hp.featuredCategories.includes(c.id);
-              return (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() =>
-                    patch(
-                      "featuredCategories",
-                      on ? hp.featuredCategories.filter((x) => x !== c.id) : [...hp.featuredCategories, c.id]
-                    )
-                  }
-                  className={`min-h-[2.5rem] rounded-xl px-3 text-sm font-semibold ${
-                    on ? "bg-[#16314f] text-white" : "bg-black/5 text-[#1a2a3f]"
-                  }`}
-                >
-                  {on ? "✓ " : ""}
-                  {c.name}
-                </button>
-              );
-            })}
-          </div>
-        </Field>
-      </Section>
-
-      <Section title="בלוק יתרונות נוסף">
-        <Field label="כותרת">
-          <Input
-            value={hp.nylonAdvantages.title}
-            onChange={(e) => patch("nylonAdvantages", { ...hp.nylonAdvantages, title: e.target.value })}
-          />
+        <Field label="משפט פתיחה">
+          <Textarea value={hp.intro.lead} onChange={(e) => patch("intro", { ...hp.intro, lead: e.target.value })} />
         </Field>
         <ListEditor
           label="פסקאות"
-          value={hp.nylonAdvantages.paragraphs}
-          onChange={(v) => patch("nylonAdvantages", { ...hp.nylonAdvantages, paragraphs: v })}
+          value={hp.intro.paragraphs}
+          onChange={(v) => patch("intro", { ...hp.intro, paragraphs: v })}
+        />
+        <GalleryField
+          label="מצגת תמונות (גלריה מתחלפת)"
+          hint="התמונות שמתחלפות לצד טקסט הפתיחה."
+          value={hp.intro.gallery}
+          onBusy={setBusy}
+          onChange={(imgs) => patch("intro", { ...hp.intro, gallery: imgs })}
         />
       </Section>
 
-      <Section title="וידאו">
-        <Field label="מזהה YouTube" hint="רק המזהה, למשל dQw4w9WgXcQ. ריק = משתמש בסרטון המקומי בעמוד הבית.">
-          <Input dir="ltr" value={hp.video.youtubeId} onChange={(e) => patch("video", { ...hp.video, youtubeId: e.target.value })} />
+      {/* 5 — HOT DEALS (rotating cube) */}
+      <Section title="5 · הצצה למתחם (קוביה מסתובבת)" hint="הקובייה התלת‑ממדית עם תמונות המתחם">
+        <Field label="תווית">
+          <Input value={hp.hotDeals.eyebrow} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, eyebrow: e.target.value })} />
         </Field>
         <Field label="כותרת">
-          <Input value={hp.video.title} onChange={(e) => patch("video", { ...hp.video, title: e.target.value })} />
+          <Input value={hp.hotDeals.title} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, title: e.target.value })} />
         </Field>
-        <Field label="כיתוב">
-          <Textarea value={hp.video.caption} onChange={(e) => patch("video", { ...hp.video, caption: e.target.value })} />
+        <Field label="טקסט">
+          <Textarea value={hp.hotDeals.text} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, text: e.target.value })} />
         </Field>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Field label="כפתור – טקסט">
+            <Input value={hp.hotDeals.cta.label} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, cta: { ...hp.hotDeals.cta, label: e.target.value } })} />
+          </Field>
+          <Field label="כפתור – קישור">
+            <Input dir="ltr" value={hp.hotDeals.cta.href} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, cta: { ...hp.hotDeals.cta, href: e.target.value } })} />
+          </Field>
+        </div>
+        <GalleryField
+          label="תמונות הקובייה"
+          hint="מומלץ 3 תמונות – אחת לכל פאה."
+          value={hp.hotDeals.images}
+          onBusy={setBusy}
+          onChange={(imgs) => patch("hotDeals", { ...hp.hotDeals, images: imgs })}
+        />
       </Section>
 
-      <Section title="נתונים (Stats)">
+      {/* 6 — STATS */}
+      <Section title="6 · נתונים" hint="רצועת המספרים/המילים הבולטות">
         {hp.stats.map((s, i) => (
           <div key={i} className="flex items-center gap-2">
             <Input
@@ -290,7 +327,30 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
         </Button>
       </Section>
 
-      <Section title="קריאה לפעולה (יחידות פנויות)">
+      {/* 7 — MODEL (nylonAdvantages) */}
+      <Section title="7 · המודל שלנו" hint="בלוק 'מודל פיקס' עם הסקיצה">
+        <Field label="כותרת">
+          <Input
+            value={hp.nylonAdvantages.title}
+            onChange={(e) => patch("nylonAdvantages", { ...hp.nylonAdvantages, title: e.target.value })}
+          />
+        </Field>
+        <ListEditor
+          label="פסקאות"
+          value={hp.nylonAdvantages.paragraphs}
+          onChange={(v) => patch("nylonAdvantages", { ...hp.nylonAdvantages, paragraphs: v })}
+        />
+        <ImageUpload
+          label="תמונה (סקיצת המודל)"
+          value={hp.nylonAdvantages.image}
+          kind="wide"
+          onBusy={setBusy}
+          onUploaded={(path) => patch("nylonAdvantages", { ...hp.nylonAdvantages, image: path })}
+        />
+      </Section>
+
+      {/* 8 — BRANDED PITCH */}
+      <Section title="8 · יחידות פנויות להשכרה" hint="הבלוק עם תמונה ורשימת נקודות">
         <Field label="כותרת">
           <Input value={hp.brandedPitch.title} onChange={(e) => patch("brandedPitch", { ...hp.brandedPitch, title: e.target.value })} />
         </Field>
@@ -311,32 +371,19 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
         />
       </Section>
 
-      <Section title="הצצה למתחם (Hot Deals)">
-        <Field label="תווית">
-          <Input value={hp.hotDeals.eyebrow} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, eyebrow: e.target.value })} />
-        </Field>
-        <Field label="כותרת">
-          <Input value={hp.hotDeals.title} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, title: e.target.value })} />
-        </Field>
-        <Field label="טקסט">
-          <Textarea value={hp.hotDeals.text} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, text: e.target.value })} />
-        </Field>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Field label="כפתור – טקסט">
-            <Input value={hp.hotDeals.cta.label} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, cta: { ...hp.hotDeals.cta, label: e.target.value } })} />
-          </Field>
-          <Field label="כפתור – קישור">
-            <Input dir="ltr" value={hp.hotDeals.cta.href} onChange={(e) => patch("hotDeals", { ...hp.hotDeals, cta: { ...hp.hotDeals.cta, href: e.target.value } })} />
-          </Field>
-        </div>
-        <HotDealsGallery
-          value={hp.hotDeals.images}
+      {/* 9 — GALLERY MOSAIC */}
+      <Section title="9 · גלריית המתחם" hint="רשת התמונות הגדולה לקראת סוף העמוד">
+        <GalleryField
+          label="תמונות הגלריה"
+          hint="התמונה הראשונה מוצגת גדולה. מומלץ 6 תמונות."
+          value={hp.galleryMosaic}
           onBusy={setBusy}
-          onChange={(imgs) => patch("hotDeals", { ...hp.hotDeals, images: imgs })}
+          onChange={(imgs) => patch("galleryMosaic", imgs)}
         />
       </Section>
 
-      <Section title="קצת עלינו">
+      {/* 10 — ABOUT TEASER */}
+      <Section title="10 · קצת עלינו" hint="הפסקה הקצרה עם הקישור לעמוד אודות">
         <Field label="כותרת">
           <Input value={hp.aboutTeaser.title} onChange={(e) => patch("aboutTeaser", { ...hp.aboutTeaser, title: e.target.value })} />
         </Field>
@@ -348,48 +395,48 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
         </Field>
       </Section>
 
+      {/* 11 — FAQ */}
+      <Section title="11 · שאלות נפוצות" hint="האקורדיון בתחתית העמוד">
+        <p className="text-xs text-[#5e6773]">כל שורה: שאלה ותשובה. השאלות מופיעות גם בגוגל (FAQ).</p>
+        {faq.map((f, i) => (
+          <div key={i} className="space-y-2 rounded-lg bg-[#f7f4ee] p-3">
+            <Input
+              value={f.q}
+              placeholder="שאלה"
+              onChange={(e) => {
+                const next = [...faq];
+                next[i] = { ...f, q: e.target.value };
+                patch("faq", next);
+              }}
+            />
+            <Textarea
+              value={f.a}
+              placeholder="תשובה"
+              onChange={(e) => {
+                const next = [...faq];
+                next[i] = { ...f, a: e.target.value };
+                patch("faq", next);
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => patch("faq", faq.filter((_, idx) => idx !== i))}
+              className="text-sm text-red-600"
+            >
+              הסרה
+            </button>
+          </div>
+        ))}
+        <Button variant="ghost" onClick={() => patch("faq", [...faq, { q: "", a: "" }])}>
+          + שאלה
+        </Button>
+      </Section>
+
       <div className="sticky bottom-0 -mx-3 border-t border-[#dde3ea] bg-white/95 px-3 py-3 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0">
         <Button onClick={save} disabled={saving || busy} className="w-full sm:w-auto">
           {saving ? "שומר…" : busy ? "מעלה תמונה…" : "שמירת עמוד הבית"}
         </Button>
       </div>
     </div>
-  );
-}
-
-function HotDealsGallery({
-  value,
-  onChange,
-  onBusy,
-}: {
-  value: string[];
-  onChange: (g: string[]) => void;
-  onBusy: (b: boolean) => void;
-}) {
-  return (
-    <Field label="גלריית תמונות">
-      {value.length ? (
-        <div className="mb-2 flex flex-wrap gap-2">
-          {value.map((src, i) => (
-            <div key={`${src}-${i}`} className="relative h-16 w-16 overflow-hidden rounded-lg border border-[#dde3ea]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="" className="h-full w-full object-cover" />
-              <button
-                type="button"
-                onClick={() => onChange(value.filter((_, idx) => idx !== i))}
-                className="absolute right-0 top-0 grid h-5 w-5 place-items-center bg-black/60 text-xs text-white"
-                aria-label="הסרה"
-              >
-                ✕
-              </button>
-              <div className="absolute bottom-0.5 left-0.5">
-                <FramingButton src={src} path={src} compact />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : null}
-      <ImageUpload label="" value="" kind="wide" onBusy={onBusy} onUploaded={(path) => onChange([...value, path])} />
-    </Field>
   );
 }

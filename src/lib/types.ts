@@ -38,14 +38,10 @@ export type Homepage = {
   announcement: string;
   intro: { title: string; lead: string; paragraphs: string[]; gallery: string[] };
   advantages: Advantage[];
-  bagTypesTitle: string;
-  bagTypesSubtitle: string;
-  bagTypes: string[];
-  featuredCategories: string[];
-  nylonAdvantages: { title: string; paragraphs: string[] };
-  video: { youtubeId: string; title: string; caption: string };
+  nylonAdvantages: { title: string; paragraphs: string[]; image: string };
   stats: Stat[];
   brandedPitch: { title: string; text: string; bullets: string[]; image: string };
+  galleryMosaic: string[];
   aboutTeaser: { title: string; text: string; href: string };
   hotDeals: {
     eyebrow: string;
@@ -55,6 +51,13 @@ export type Homepage = {
     images: string[];
   };
   faq?: { q: string; a: string }[];
+  // Legacy fields kept optional for backward compatibility; no longer rendered
+  // on the live homepage and not editable in the admin.
+  bagTypesTitle?: string;
+  bagTypesSubtitle?: string;
+  bagTypes?: string[];
+  featuredCategories?: string[];
+  video?: { youtubeId: string; title: string; caption: string };
 };
 
 // Maps a stored image path (e.g. "/images/uploads/foo.jpg") to a CSS

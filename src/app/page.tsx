@@ -16,15 +16,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const galleryImages = [
-  "/images/gallery/corridor-bright.jpg",
-  "/images/gallery/meeting-room.jpg",
-  "/images/gallery/corridor-rooms.jpg",
-  "/images/gallery/lounge-panels.jpg",
-  "/images/gallery/lounge-bar.jpg",
-  "/images/gallery/exterior.jpg",
-];
-
 export default function Home() {
   return (
     <>
@@ -190,7 +181,7 @@ export default function Home() {
           </div>
           <div>
             <div className="relative aspect-square rounded-3xl overflow-hidden shadow-xl ring-1 ring-border bg-white">
-              <Image src={asset("/images/promo/lease-sketch.jpg")} alt="מודל מחיר פיקס – משרדים חדשים להשכרה ביבנה, מגדלי האימפריה נדל״ן" fill className="object-contain" />
+              <Image src={asset(homepage.nylonAdvantages.image)} alt="מודל מחיר פיקס – משרדים חדשים להשכרה ביבנה, מגדלי האימפריה נדל״ן" fill className="object-contain" />
             </div>
           </div>
         </div>
@@ -228,7 +219,7 @@ export default function Home() {
             <p className="mt-4 text-muted">הציצו פנימה – משרדים, חדר ישיבות וחללים משותפים במתחם החדש ביבנה.</p>
           </div>
           <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-            {galleryImages.map((g, i) => (
+            {homepage.galleryMosaic.map((g, i) => (
               <div
                 key={g}
                 className={`relative overflow-hidden rounded-2xl ring-1 ring-border group ${i === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-square"}`}

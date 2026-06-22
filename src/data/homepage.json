@@ -4,8 +4,14 @@
     "title": "משרדים פרטיים להשכרה ביבנה – במחיר פיקס שכולל הכל",
     "subtitle": "מתחם משרדים חדש בכניסה לעיר, בסמוך לתחנת הרכבת. משרדים ברמת גמר גבוהה לכניסה מיידית – חשמל, אינטרנט, ארנונה, ניהול וניקיון, חדר ישיבות וחניה חופשית, הכל במחיר אחד וברור.",
     "image": "/images/banners/hero.jpg",
-    "ctaPrimary": { "label": "לבדיקת זמינות", "href": "/contact/" },
-    "ctaSecondary": { "label": "למשרדים להשכרה", "href": "/products/" }
+    "ctaPrimary": {
+      "label": "לבדיקת זמינות",
+      "href": "/contact/"
+    },
+    "ctaSecondary": {
+      "label": "למשרדים להשכרה",
+      "href": "/products/"
+    }
   },
   "announcement": "מחיר פיקס שכולל הכל · כניסה מיידית · חניה חופשית צמודה · בכניסה לעיר יבנה ליד הרכבת",
   "intro": {
@@ -43,28 +49,32 @@
       "text": "מטבחון ושירותים נקיים, אינטרנט מהיר וחניה חופשית צמודה למתחם."
     }
   ],
-  "bagTypesTitle": "סוגי המשרדים שלנו",
-  "bagTypesSubtitle": "מבחר חללי עבודה במתחם – לחצו על כל יחידה לפרטים מלאים ולבדיקת זמינות.",
-  "bagTypes": ["private-office-compact", "private-office-spacious", "team-suite", "meeting-room", "business-complex", "flex-monthly"],
-  "featuredCategories": ["private-office-spacious", "meeting-room", "team-suite", "business-complex", "flex-daily", "amenities-package"],
   "nylonAdvantages": {
     "title": "מודל פיקס – שכר דירה אחד שכולל הכל",
     "paragraphs": [
       "אנחנו מאמינים בשקיפות מלאה. במקום שורה של חשבונות נפרדים – חשמל, ארנונה, ניהול, ניקיון ואינטרנט – אתם מקבלים מחיר פיקס אחד וברור שכולל את הכל.",
       "כך תוכלו לתקצב את העסק בלי הפתעות, להיכנס מיידית ולהתחיל לעבוד מהיום הראשון – בלי התעסקות מול ספקים ובלי עלויות נסתרות.",
       "וכשתצטרכו יותר מקום או פחות, המודל גמיש – לטווח ארוך או קצר, חודשי, שבועי או יומי, בדיוק לפי קצב הצמיחה שלכם."
-    ]
-  },
-  "video": {
-    "youtubeId": "",
-    "title": "מגדלי האימפריה – מתחם משרדים ביבנה",
-    "caption": "סיור קצר במתחם המשרדים החדש שלנו ביבנה."
+    ],
+    "image": "/images/promo/lease-sketch.jpg"
   },
   "stats": [
-    { "value": "פיקס", "label": "מחיר שכולל הכל" },
-    { "value": "מיידי", "label": "מוכן לכניסה" },
-    { "value": "חינם", "label": "חדר ישיבות וחניה" },
-    { "value": "יבנה", "label": "ליד תחנת הרכבת" }
+    {
+      "value": "פיקס",
+      "label": "מחיר שכולל הכל"
+    },
+    {
+      "value": "מיידי",
+      "label": "מוכן לכניסה"
+    },
+    {
+      "value": "חינם",
+      "label": "חדר ישיבות וחניה"
+    },
+    {
+      "value": "יבנה",
+      "label": "ליד תחנת הרכבת"
+    }
   ],
   "brandedPitch": {
     "title": "יחידות פנויות להשכרה עכשיו",
@@ -78,6 +88,14 @@
     ],
     "image": "/images/offices/ad-meeting.png"
   },
+  "galleryMosaic": [
+    "/images/gallery/corridor-bright.jpg",
+    "/images/gallery/meeting-room.jpg",
+    "/images/gallery/corridor-rooms.jpg",
+    "/images/gallery/lounge-panels.jpg",
+    "/images/gallery/lounge-bar.jpg",
+    "/images/gallery/exterior.jpg"
+  ],
   "aboutTeaser": {
     "title": "קצת עלינו",
     "text": "מגדלי האימפריה נדל״ן מביאים ליבנה מתחם משרדים חדש ומודרני, במודל מחיר פיקס פשוט ושקוף. אנחנו דואגים לכל מה שמסביב – תחזוקה, ניקיון, אינטרנט וחניה – כדי שתוכלו להתרכז רק בעסק שלכם.",
@@ -87,7 +105,10 @@
     "eyebrow": "להשכרה עכשיו",
     "title": "מתחם המשרדים החדש ביבנה",
     "text": "סיור מהיר במתחם – משרדים פרטיים, חללי צוות, חדר ישיבות מאובזר וחללים משותפים. הציצו פנימה ובדקו איזו יחידה מתאימה לכם.",
-    "cta": { "label": "למשרדים להשכרה", "href": "/products/" },
+    "cta": {
+      "label": "למשרדים להשכרה",
+      "href": "/products/"
+    },
     "images": [
       "/images/promo/lease-private.jpg",
       "/images/promo/lease-sketch.jpg",
