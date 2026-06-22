@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { homepage, categories, products, getProduct, site, whatsappLink, telLink } from "@/lib/data";
-import ProductCard from "@/components/ProductCard";
+import { homepage, categories, site, whatsappLink, telLink } from "@/lib/data";
 import LeadForm from "@/components/LeadForm";
 import ProductCube from "@/components/ProductCube";
 import GallerySlideshow from "@/components/GallerySlideshow";
@@ -18,22 +17,15 @@ export const metadata: Metadata = {
 };
 
 const galleryImages = [
-  "/images/offices/ad-corridor.png",
-  "/images/offices/ad-meeting.png",
-  "/images/offices/ad-sofa.png",
-  "/images/banners/hero.jpg",
-  "/images/offices/features-sketch.png",
+  "/images/gallery/corridor-bright.jpg",
+  "/images/gallery/meeting-room.jpg",
+  "/images/gallery/corridor-rooms.jpg",
+  "/images/gallery/lounge-panels.jpg",
+  "/images/gallery/lounge-bar.jpg",
+  "/images/gallery/exterior.jpg",
 ];
 
 export default function Home() {
-  const featured = homepage.featuredCategories
-    .map((id) => getProduct(products.find((p) => p.id === id)?.slug ?? ""))
-    .filter(Boolean);
-
-  const bagTypes = homepage.bagTypes
-    .map((id) => products.find((p) => p.id === id))
-    .filter(Boolean);
-
   return (
     <>
       {/* HERO */}
@@ -150,35 +142,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BAG TYPES — images with explanations */}
-      <section className="bg-cream-2 border-y border-border">
-        <div className="mx-auto max-w-6xl px-4 py-16">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="font-display text-3xl sm:text-4xl font-black">{homepage.bagTypesTitle}</h2>
-            <div className="mt-3 h-0.5 w-20 mx-auto gold-rule rounded-full" />
-            <p className="mt-4 text-muted">{homepage.bagTypesSubtitle}</p>
-          </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {bagTypes.map((p) => p && (
-              <Link
-                key={p.id}
-                href={`/products/${p.slug}/`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface card-elegant transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                  <Image src={asset(p.image)} alt={p.name} fill className="object-cover transition duration-500 group-hover:scale-105" />
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="font-display text-xl font-bold group-hover:text-brand transition">{p.name}</h3>
-                  <p className="mt-2 text-sm text-muted leading-relaxed line-clamp-4 flex-1">{p.description}</p>
-                  <span className="mt-3 text-sm font-semibold text-gold-dark">קראו עוד ←</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CATEGORIES — colorful */}
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="text-center max-w-2xl mx-auto">
@@ -226,26 +189,9 @@ export default function Home() {
             ))}
           </div>
           <div>
-            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl ring-1 ring-border bg-ink">
-              <Image src={asset("/images/offices/ad-sofa.png")} alt="חלל עבודה במתחם המשרדים של מגדלי האימפריה ביבנה" fill className="object-cover" />
+            <div className="relative aspect-square rounded-3xl overflow-hidden shadow-xl ring-1 ring-border bg-white">
+              <Image src={asset("/images/promo/lease-sketch.jpg")} alt="מודל מחיר פיקס – משרדים חדשים להשכרה ביבנה, מגדלי האימפריה נדל״ן" fill className="object-contain" />
             </div>
-            <p className="mt-3 text-center text-sm text-muted">{homepage.video.caption}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* FEATURED PRODUCTS */}
-      <section className="bg-cream-2 border-y border-border">
-        <div className="mx-auto max-w-6xl px-4 py-16">
-          <div className="flex items-end justify-between gap-4 flex-wrap">
-            <div>
-              <h2 className="font-display text-3xl sm:text-4xl font-black">יחידות מובחרות</h2>
-              <p className="mt-2 text-muted">החללים הפופולריים והמבוקשים ביותר במתחם.</p>
-            </div>
-            <Link href="/products/" className="text-sm font-semibold text-gold-dark hover:underline">לכל המשרדים ←</Link>
-          </div>
-          <div className="mt-8 grid gap-4 grid-cols-2 lg:grid-cols-3">
-            {featured.map((p) => p && <ProductCard key={p.id} product={p} />)}
           </div>
         </div>
       </section>

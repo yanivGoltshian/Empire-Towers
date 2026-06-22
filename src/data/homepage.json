@@ -17,10 +17,12 @@
       "המודל גמיש לטווח ארוך או קצר – חודשי, שבועי או יומי – עם חניון נוח וחופשי צמוד למתחם. המלאי מוגבל והמחיר סופר משתלם, מומלץ לבדוק זמינות מראש."
     ],
     "gallery": [
-      "/images/offices/ad-corridor.png",
-      "/images/offices/ad-meeting.png",
-      "/images/offices/ad-sofa.png",
-      "/images/banners/hero.jpg"
+      "/images/gallery/corridor-bright.jpg",
+      "/images/gallery/meeting-room.jpg",
+      "/images/gallery/corridor-rooms.jpg",
+      "/images/gallery/lounge-panels.jpg",
+      "/images/gallery/lounge-bar.jpg",
+      "/images/gallery/exterior.jpg"
     ]
   },
   "advantages": [
@@ -87,11 +89,9 @@
     "text": "סיור מהיר במתחם – משרדים פרטיים, חללי צוות, חדר ישיבות מאובזר וחללים משותפים. הציצו פנימה ובדקו איזו יחידה מתאימה לכם.",
     "cta": { "label": "למשרדים להשכרה", "href": "/products/" },
     "images": [
-      "/images/banners/hero.jpg",
-      "/images/offices/ad-corridor.png",
-      "/images/offices/ad-meeting.png",
-      "/images/offices/ad-sofa.png",
-      "/images/offices/features-sketch.png"
+      "/images/promo/lease-private.jpg",
+      "/images/promo/lease-sketch.jpg",
+      "/images/promo/lease-lounge.jpg"
     ]
   },
   "faq": [
