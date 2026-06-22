@@ -20,7 +20,7 @@ const frank = Frank_Ruhl_Libre({
   weight: ["500", "700", "800", "900"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yanivgoltshian.github.io";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://empire-towers.vercel.app";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export const metadata: Metadata = {

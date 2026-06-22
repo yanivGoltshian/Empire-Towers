@@ -2,7 +2,7 @@ import { site } from "@/lib/data";
 import type { Product } from "@/lib/types";
 
 export const SITE_URL =
-  (process.env.NEXT_PUBLIC_SITE_URL || "https://yanivgoltshian.github.io") +
+  (process.env.NEXT_PUBLIC_SITE_URL || "https://empire-towers.vercel.app") +
   (process.env.NEXT_PUBLIC_BASE_PATH || "");
 
 export function organizationLd() {
