@@ -54,6 +54,7 @@ export type Homepage = {
     cta: CTA;
     images: string[];
   };
+  faq?: { q: string; a: string }[];
 };
 
 export type Site = {

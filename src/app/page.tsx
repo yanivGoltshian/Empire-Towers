@@ -1,11 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { homepage, categories, products, getProduct, site, whatsappLink, telLink } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
 import LeadForm from "@/components/LeadForm";
 import ProductCube from "@/components/ProductCube";
 import GallerySlideshow from "@/components/GallerySlideshow";
+import JsonLd from "@/components/JsonLd";
+import { faqPageLd } from "@/lib/structured-data";
 import { asset } from "@/lib/asset";
+
+export const metadata: Metadata = {
+  title: { absolute: "משרדים להשכרה ביבנה במחיר פיקס | מגדלי האימפריה" },
+  description:
+    "משרדים פרטיים להשכרה ביבנה במחיר פיקס שכולל חשמל, אינטרנט, ארנונה וניקיון. חדר ישיבות מאובזר, חניה חופשית צמודה וכניסה מיידית – בכניסה לעיר וליד הרכבת.",
+  alternates: { canonical: "/" },
+};
 
 const galleryImages = [
   "/images/offices/ad-corridor.png",
@@ -294,6 +304,36 @@ export default function Home() {
           קראו עוד עלינו ←
         </Link>
       </section>
+
+      {/* FAQ — objection handling + FAQPage schema */}
+      {homepage.faq && homepage.faq.length > 0 && (
+        <section className="bg-cream-2 border-y border-border">
+          <div className="mx-auto max-w-3xl px-4 py-16">
+            <div className="text-center">
+              <h2 className="font-display text-3xl sm:text-4xl font-black">שאלות נפוצות</h2>
+              <div className="mt-3 h-0.5 w-20 mx-auto gold-rule rounded-full" />
+              <p className="mt-4 text-muted">כל מה שצריך לדעת לפני שמתחילים – ואם נשארה שאלה, נשמח לענות בוואטסאפ.</p>
+            </div>
+            <div className="mt-10 space-y-3">
+              {homepage.faq.map((f) => (
+                <details key={f.q} className="group rounded-2xl border border-border bg-surface px-5 card-elegant">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-display font-bold text-lg">
+                    {f.q}
+                    <span className="shrink-0 text-gold-dark transition group-open:rotate-45 text-2xl leading-none">+</span>
+                  </summary>
+                  <p className="pb-5 -mt-1 text-muted leading-relaxed">{f.a}</p>
+                </details>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <a href={whatsappLink("היי, יש לי שאלה על משרד להשכרה במגדלי האימפריה")} target="_blank" rel="noopener noreferrer" className="inline-flex rounded-full bg-eco px-7 py-3.5 font-semibold text-white shadow-lg hover:bg-eco-dark transition">
+                יש לי שאלה נוספת
+              </a>
+            </div>
+          </div>
+          <JsonLd data={faqPageLd(homepage.faq)} />
+        </section>
+      )}
 
       {/* CONTACT + MAP */}
       <section className="hero-glow text-white">

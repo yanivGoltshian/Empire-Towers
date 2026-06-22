@@ -23,10 +23,46 @@ export function organizationLd() {
       "@type": "PostalAddress",
       streetAddress: site.address,
       addressLocality: site.city,
+      postalCode: "7680900",
       addressCountry: "IL",
     },
-    openingHours: ["Su-Th 09:00-18:00", "Fr 09:00-13:00"],
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 31.8862,
+      longitude: 34.735,
+    },
+    hasMap: "https://maps.google.com/maps?q=%D7%94%D7%A7%D7%99%D7%A9%D7%95%D7%9F%204%20%D7%99%D7%91%D7%A0%D7%94",
+    areaServed: [
+      { "@type": "City", name: "יבנה" },
+      { "@type": "AdministrativeArea", name: "מחוז המרכז" },
+    ],
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+        opens: "09:00",
+        closes: "18:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Friday",
+        opens: "09:00",
+        closes: "13:00",
+      },
+    ],
     sameAs: [site.social.facebook, site.social.instagram].filter(Boolean),
+  };
+}
+
+export function faqPageLd(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((it) => ({
+      "@type": "Question",
+      name: it.q,
+      acceptedAnswer: { "@type": "Answer", text: it.a },
+    })),
   };
 }
 

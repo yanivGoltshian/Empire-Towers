@@ -50,7 +50,7 @@ export default function SocialButtons({
       href: whatsappLink("היי, אשמח לקבל פרטים על משרד פרטי להשכרה במגדלי האימפריה"),
       external: true,
     },
-  ];
+  ].filter((it) => Boolean(it.href));
 
   const base =
     variant === "light"

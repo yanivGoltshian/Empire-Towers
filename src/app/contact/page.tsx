@@ -11,9 +11,14 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   const cards = [
     { title: "טלפון", value: site.phone, href: telLink(site.phone) },
-    { title: "וואטסאפ", value: "שליחת הודעה", href: whatsappLink("היי, אשמח לקבל פרטים על הפרויקטים והנכסים של מגדלי האימפריה נדל״ן") },
-    { title: "אינסטגרם", value: "empire.towers", href: site.social.instagram },
-    { title: "פייסבוק", value: "מגדלי האימפריה נדל״ן", href: site.social.facebook },
+    { title: "וואטסאפ", value: "שליחת הודעה", href: whatsappLink("היי, אשמח לקבל פרטים על משרד פרטי להשכרה במגדלי האימפריה נדל״ן") },
+    {
+      title: "ניווט",
+      value: "פתחו ב-Waze",
+      href: `https://waze.com/ul?q=${encodeURIComponent(`${site.address} ${site.city}`)}&navigate=yes`,
+    },
+    ...(site.social.instagram ? [{ title: "אינסטגרם", value: "empire.towers", href: site.social.instagram }] : []),
+    ...(site.social.facebook ? [{ title: "פייסבוק", value: "מגדלי האימפריה נדל״ן", href: site.social.facebook }] : []),
   ];
 
   return (
@@ -44,10 +49,16 @@ export default function ContactPage() {
           <div className="mt-6 rounded-2xl border border-border bg-surface p-5 space-y-2 text-sm">
             <p><strong>כתובת:</strong> {site.address}, {site.city}</p>
             <p><strong>שעות פעילות:</strong> {site.hours}</p>
-            <div className="flex gap-3 pt-2">
-              <a href={site.social.facebook} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">Facebook</a>
-              <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">Instagram</a>
-            </div>
+            {(site.social.facebook || site.social.instagram) && (
+              <div className="flex gap-3 pt-2">
+                {site.social.facebook && (
+                  <a href={site.social.facebook} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">Facebook</a>
+                )}
+                {site.social.instagram && (
+                  <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">Instagram</a>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="mt-6 overflow-hidden rounded-2xl border border-border">
