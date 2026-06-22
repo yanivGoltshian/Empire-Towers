@@ -10,12 +10,14 @@ import { ImageFocusEditor } from "./ImageFocusEditor";
 export function FramingButton({
   src,
   path,
+  frame,
   className = "",
   compact = false,
   onSaved,
 }: {
   src: string;
   path: string;
+  frame?: string;
   className?: string;
   compact?: boolean;
   onSaved?: (position: string) => void;
@@ -39,7 +41,7 @@ export function FramingButton({
         🎯{compact ? "" : <span>מיקוד במסגרת</span>}
       </button>
       {open ? (
-        <ImageFocusEditor src={src} path={path} onClose={() => setOpen(false)} onSaved={onSaved} />
+        <ImageFocusEditor src={src} path={path} frame={frame} onClose={() => setOpen(false)} onSaved={onSaved} />
       ) : null}
     </>
   );

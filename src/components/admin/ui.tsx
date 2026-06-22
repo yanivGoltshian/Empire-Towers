@@ -127,12 +127,16 @@ export function ImageUpload({
   label,
   value,
   kind,
+  frame,
+  framing = true,
   onUploaded,
   onBusy,
 }: {
   label: string;
   value: string;
   kind: "wide" | "card";
+  frame?: string;
+  framing?: boolean;
   onUploaded: (path: string) => void;
   onBusy?: (busy: boolean) => void;
 }) {
@@ -211,9 +215,9 @@ export function ImageUpload({
               {value}
             </p>
           ) : null}
-          {value ? (
+          {value && framing ? (
             <div className="mt-2">
-              <FramingButton src={previewSrc} path={value} />
+              <FramingButton src={previewSrc} path={value} frame={frame} />
             </div>
           ) : null}
           {err ? <p className="mt-1 text-xs text-red-600">{err}</p> : null}

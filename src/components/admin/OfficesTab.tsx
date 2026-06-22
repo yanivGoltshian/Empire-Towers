@@ -155,6 +155,7 @@ export default function OfficesTab({ toast }: { toast: (t: ToastState) => void }
             label="תמונה ראשית"
             value={e.image || ""}
             kind="card"
+            frame="4 / 3"
             onBusy={setBusy}
             onUploaded={(path) => setEditing({ ...e, image: path })}
           />
@@ -231,7 +232,7 @@ function GalleryEditor({
                 ✕
               </button>
               <div className="absolute bottom-0.5 left-0.5">
-                <FramingButton src={adminPreviewSrc(src)} path={src} compact />
+                <FramingButton src={adminPreviewSrc(src)} path={src} frame="4 / 3" compact />
               </div>
             </div>
           ))}
@@ -241,6 +242,7 @@ function GalleryEditor({
         label=""
         value=""
         kind="wide"
+        framing={false}
         onBusy={onBusy}
         onUploaded={(path) => onChange([...value, path])}
       />

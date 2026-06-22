@@ -13,27 +13,33 @@ function parsePos(pos: string | undefined): { x: number; y: number } {
   return { x: clamp(parseFloat(m[1])), y: clamp(parseFloat(m[2])) };
 }
 
-const FRAMES: { label: string; ratio: string }[] = [
-  { label: "רוחבי (16:9)", ratio: "16 / 9" },
-  { label: "ריבועי (1:1)", ratio: "1 / 1" },
-  { label: "לאורך (3:4)", ratio: "3 / 4" },
-];
+// Maps the optional aspect-ratio string to a Hebrew label for the preview caption.
+function frameLabel(ratio: string): string {
+  if (ratio === "1 / 1") return "ריבוע (כפי שמופיע באתר)";
+  if (ratio === "4 / 3") return "מסגרת 4:3 (כפי שמופיע באתר)";
+  if (ratio === "3 / 4") return "מסגרת לאורך (כפי שמופיע באתר)";
+  return "מסגרת רחבה (כפי שמופיע באתר)";
+}
 
 // A draggable focal-point picker. The owner clicks/drags the part of the image
 // they want kept in view; we store it as a CSS object-position so every cropping
 // (object-cover) frame on the site shows that point. Non-destructive — the
-// original image file is untouched.
+// original image file is untouched. `frame` is the EXACT aspect-ratio this image
+// uses on the public site, so the preview shows the real crop (not a generic grid).
 export function ImageFocusEditor({
   src,
   path,
+  frame,
   onClose,
   onSaved,
 }: {
   src: string;
   path: string;
+  frame?: string;
   onClose: () => void;
   onSaved?: (position: string) => void;
 }) {
+  const previewRatio = frame || "16 / 9";
   const [pos, setPos] = React.useState<{ x: number; y: number }>({ x: 50, y: 50 });
   const [loaded, setLoaded] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
@@ -117,6 +123,12 @@ export function ImageFocusEditor({
         </>
       }
     >
+      {err ? (
+        <div className="sticky top-0 z-20 -mx-1 rounded-lg bg-red-600 px-3 py-2 text-center text-sm font-semibold text-white shadow">
+          {err}
+        </div>
+      ) : null}
+
       <p className="text-sm text-[#5e6773]">
         גררו את הנקודה אל החלק החשוב בתמונה. כך נדאג שהוא יישאר במרכז המסגרת בכל
         מקום שבו התמונה מופיעה באתר (התמונה המקורית לא משתנה).
@@ -149,32 +161,27 @@ export function ImageFocusEditor({
         object-position: {position}
       </p>
 
-      {/* Live preview of how the chosen point crops in each frame on the site. */}
+      {/* Live preview of how the chosen point crops in the EXACT frame the site uses. */}
       <div>
-        <span className="mb-2 block text-sm font-semibold text-[#1a2a3f]">תצוגה מקדימה במסגרות</span>
-        <div className="grid grid-cols-3 gap-2">
-          {FRAMES.map((f) => (
-            <div key={f.ratio}>
-              <div
-                className="relative w-full overflow-hidden rounded-lg border border-[#dde3ea] bg-[#f7f4ee]"
-                style={{ aspectRatio: f.ratio }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt=""
-                  className="absolute inset-0 h-full w-full object-cover"
-                  style={{ objectPosition: position }}
-                  draggable={false}
-                />
-              </div>
-              <p className="mt-1 text-center text-[11px] text-[#5e6773]">{f.label}</p>
-            </div>
-          ))}
+        <span className="mb-2 block text-sm font-semibold text-[#1a2a3f]">
+          {frameLabel(previewRatio)}
+        </span>
+        <div className="mx-auto w-full max-w-[280px]">
+          <div
+            className="relative w-full overflow-hidden rounded-lg border border-[#dde3ea] bg-[#f7f4ee]"
+            style={{ aspectRatio: previewRatio }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={src}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ objectPosition: position }}
+              draggable={false}
+            />
+          </div>
         </div>
       </div>
-
-      {err ? <p className="text-sm text-red-600">{err}</p> : null}
     </Modal>
   );
 }

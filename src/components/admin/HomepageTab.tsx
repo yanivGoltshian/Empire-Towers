@@ -51,12 +51,14 @@ function GalleryField({
   label,
   hint,
   value,
+  frame,
   onChange,
   onBusy,
 }: {
   label: string;
   hint?: string;
   value: string[];
+  frame?: string;
   onChange: (g: string[]) => void;
   onBusy: (b: boolean) => void;
 }) {
@@ -77,7 +79,7 @@ function GalleryField({
                 ✕
               </button>
               <div className="absolute bottom-0.5 left-0.5">
-                <FramingButton src={src} path={src} compact />
+                <FramingButton src={src} path={src} frame={frame} compact />
               </div>
             </div>
           ))}
@@ -85,7 +87,7 @@ function GalleryField({
       ) : (
         <p className="mb-2 text-xs text-[#9aa4b2]">עדיין אין תמונות. הוסיפו תמונה ראשונה למטה.</p>
       )}
-      <ImageUpload label="" value="" kind="wide" onBusy={onBusy} onUploaded={(path) => onChange([...value, path])} />
+      <ImageUpload label="" value="" kind="wide" framing={false} onBusy={onBusy} onUploaded={(path) => onChange([...value, path])} />
     </Field>
   );
 }
@@ -167,6 +169,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           label="תמונת רקע (הבניין)"
           value={hp.hero.image}
           kind="wide"
+          frame="16 / 9"
           onBusy={setBusy}
           onUploaded={(path) => patch("hero", { ...hp.hero, image: path })}
         />
@@ -261,6 +264,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           label="מצגת תמונות (גלריה מתחלפת)"
           hint="התמונות שמתחלפות לצד טקסט הפתיחה."
           value={hp.intro.gallery}
+          frame="16 / 9"
           onBusy={setBusy}
           onChange={(imgs) => patch("intro", { ...hp.intro, gallery: imgs })}
         />
@@ -289,6 +293,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           label="תמונות הקובייה"
           hint="מומלץ 3 תמונות – אחת לכל פאה."
           value={hp.hotDeals.images}
+          frame="1 / 1"
           onBusy={setBusy}
           onChange={(imgs) => patch("hotDeals", { ...hp.hotDeals, images: imgs })}
         />
@@ -344,6 +349,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           label="תמונה (סקיצת המודל)"
           value={hp.nylonAdvantages.image}
           kind="wide"
+          framing={false}
           onBusy={setBusy}
           onUploaded={(path) => patch("nylonAdvantages", { ...hp.nylonAdvantages, image: path })}
         />
@@ -366,6 +372,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           label="תמונה"
           value={hp.brandedPitch.image}
           kind="wide"
+          frame="4 / 3"
           onBusy={setBusy}
           onUploaded={(path) => patch("brandedPitch", { ...hp.brandedPitch, image: path })}
         />
@@ -377,6 +384,7 @@ export default function HomepageTab({ toast }: { toast: (t: ToastState) => void 
           label="תמונות הגלריה"
           hint="התמונה הראשונה מוצגת גדולה. מומלץ 6 תמונות."
           value={hp.galleryMosaic}
+          frame="1 / 1"
           onBusy={setBusy}
           onChange={(imgs) => patch("galleryMosaic", imgs)}
         />
